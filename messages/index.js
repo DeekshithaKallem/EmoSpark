@@ -13,8 +13,8 @@ var useEmulator = (process.env.NODE_ENV == 'development');
 
 // build the connector
 var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure.BotServiceConnector({
-  appId: process.env['MicrosoftAppId'],
-  appPassword: process.env['MicrosoftAppPassword'],
+  appId: '1c81d7a8-1602-40b8-8422-d3f1d0412923',
+  appPassword: 'yzWC35@?ahgdaLMLSD291!#',
   stateEndpoint: process.env['BotStateEndpoint'],
   openIdMetadata: process.env['BotOpenIdMetadata']
 });
@@ -23,12 +23,14 @@ var connector = useEmulator ? new builder.ChatConnector() : new botbuilder_azure
 var bot = new builder.UniversalBot(connector);
 
 // Make sure you add code to validate these fields
-var luisAppId = process.env.LuisAppId;
-var luisAPIKey = process.env.LuisAPIKey;
-var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
+var luisAppId = '1c81d7a8-1602-40b8-8422-d3f1d0412923';
+var luisAPIKey = 'yzWC35@?ahgdaLMLSD291!#';
+var luisAPIHostName = 'westus.api.cognitive.microsoft.com';
 
-const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
+//const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
+const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v2.0/apps/' + luisAppId + '&subscription-key=' + luisAPIKey;
 
+//const LuisModelUrl = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/92070e9d-cb37-4edf-9d01-d36947958ec7?subscription-key=8fc75abf1efb45cfbf265eae5d1e&spellCheck=true&verbose=true&timezoneOffset=0&q='
 // Main dialog with LUIS
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] });
@@ -70,7 +72,7 @@ bot.dialog('/profile', [
 
 bot.dialog('/counsel', [
   function (session) {
-    session.send("You can contact Waterloo Health Services at 519-888-4096 or you can visit https://uwaterloo.ca/health-services/mental-health-services for more info");
+    session.send("You can contact Waterloo Health Services at 519-888-4096 or you can visit https:// emospark.in/health-services/mental-health-services for more info");
     session.send("Alternatively, the Delton Glebe Counselling Centre is near campus and can be reached at 519-884-3305 or at http://glebecounselling.ca/");
     session.send("I'm so glad you talked to me about this. Remember, being aware of how you're feeling is a huge first step. Keep going and don't give up, you got this!");
     session.endDialog();
@@ -81,8 +83,8 @@ bot.dialog('/counsel', [
 bot.dialog('/feeling',
   function (session) {
     var res = session.message.text;
-    unirest.post('https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment')
-      .headers({ 'Accept': 'application/json', 'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': '88d91d2cc28c48628da9256371be038e' })
+    unirest.post('https://westcentralus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment')
+      .headers({ 'Accept': 'application/json', 'Content-Type': 'application/json', 'Ocp-Apim-Subscription-Key': '443a3bd38f454b509eb9c84529492dd9' })
       .send({ "documents": [{ "language": "en", "id": "bot", "text": res }] })
       .end(function (response) {
         if (Number(res) != res) {
@@ -158,7 +160,7 @@ bot.dialog('/sadEmotions2',
     var res = session.message.text;
     if (res == "Sad") {
       session.send("I'm sorry to hear that. Please know that you're not alone in this world, and that there are many people who care about you and love you very much. I am not fully equipped to help you yet, sorry. If it's an emergency, please contact 911 or your local authorities. I also encourage you to contact a trained mental health professional who will be able to help you better than I can. Hang in there!!");
-      session.send("Please visit https://uwaterloo.ca/health-services/mental-health-services if you would like more info");
+      session.send("Please visit https:// emospark.in/health-services/mental-health-services if you would like more info");
       session.beginDialog('/causes');
     } else if (res == "Tired") {
       session.send("Hey, hang in there. We all have times when we just want to call it a quit, but one will only grow through hardship. You will come out of this stronger, so don't give up! Check out this video if you want some more motivation!");
@@ -187,11 +189,11 @@ bot.dialog('/causes2',
   function (session) {
     var res = session.message.text;
     if (res === "Academic") {
-      session.send("If you are struggling with academics, it may be a great idea to see an academic advisor, as they can help you get through your problems. You can get more info here: https://uwaterloo.ca/registrar/current-students/advisors");
+      session.send("If you are struggling with academics, it may be a great idea to see an academic advisor, as they can help you get through your problems. You can get more info here: https:// emospark.in/registrar/current-students/advisors");
     } else if (res === "Coop") {
-      session.send("Don't stress, finding a job is a difficult process for everyone. Be patient and keep on applying to jobs, and look for ways to improve your employable skills. If you are still concerned, check out https://uwaterloo.ca/co-operative-education/ for more information");
+      session.send("Don't stress, finding a job is a difficult process for everyone. Be patient and keep on applying to jobs, and look for ways to improve your employable skills. If you are still concerned, check out https:// emospark.in/co-operative-education/ for more information");
     } else if (res === "Finance") {
-      session.send("There are government fundings, scholarships, and bursaries you can apply to, check out https://www.ontario.ca/page/osap-ontario-student-assistance-program and https://uwaterloo.ca/find-out-more/financing/scholarships for more details.");
+      session.send("There are government fundings, scholarships, and bursaries you can apply to, check out https://www.ontario.ca/page/osap-ontario-student-assistance-program and https:// emospark.in/find-out-more/financing/scholarships for more details.");
     } else if (res === "Social Life") {
       session.send("It's never too late to make new friends! Try joining some clubs you're interested in, talking to classmates, and attending campus events. Here is a list of all the clubs at UW, take a look, there's gotta be one for you! http://www.feds.ca/clubs-section/clubs-listing/ Get out there and be a social butterfly! :)");
     } else if (res === "Relationship") {
@@ -214,13 +216,14 @@ intents.onDefault((session) => {
   session.endDialog();
 });
 
-if (useEmulator) {
+//if (useEmulator) {
   var restify = require('restify');
   var server = restify.createServer();
   server.listen(3978, function () {
     console.log('test bot endpoint at http://localhost:3978/api/messages');
   });
   server.post('/api/messages', connector.listen());
-} else {
-  module.exports = { default: connector.listen() }
-}
+//} else {
+//  module.exports = { default: connector.listen() }
+//}
+//}
